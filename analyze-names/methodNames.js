@@ -1,9 +1,9 @@
 function isLowerCase(char) {
-    return char?.toLowerCase() === char;
+    return char !== undefined && char.toLowerCase() === char;
 }
 
 function isUpperCase(char) {
-    return char?.toUpperCase() === char;
+    return char !== undefined && char.toUpperCase() === char;
 }
 
 function* triplets(string) {
@@ -39,4 +39,34 @@ export function splitCamelCase(string) {
     }
 
     return parts;
+}
+
+export function isSnakeCase(methodName) {
+    return methodName.includes("_")
+}
+
+export function isKebabCase(methodName) {
+    return methodName.includes("-")
+}
+
+export function isCamelCase(methodName) {
+    return isLowerCase(methodName[0]) && !isKebabCase(methodName) && !isSnakeCase(methodName)
+}
+
+export function isPascalCase(name) {
+    return isUpperCase(name[0]) && !isKebabCase(name) && !isSnakeCase(name)
+}
+
+export function splitSnakeCase(name) {
+    return name.split("_")
+}
+
+export function splitKebabCase(name) {
+    return name.split("-")
+}
+
+export function splitName(name) {
+    return splitSnakeCase(name)
+        .flatMap(name => splitKebabCase(name))
+        .flatMap(name => splitCamelCase(name))
 }
