@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "run": "deno run --allow-read --allow-write script.js .. ~/Documents/react",
+    "analyze": "deno run --allow-read --allow-write script.js .. ~/Documents/react ~/Documents/svelte",
     "test": "deno test test.js"
   },
   "author": "",
