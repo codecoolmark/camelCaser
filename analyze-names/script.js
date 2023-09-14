@@ -67,6 +67,6 @@ const splittedNames = names
 
 writeStats(countOccurences(splittedNames), "./stats.csv")
 
-const originalAndSplittedNames = names.map(name => ({ name, parts: splitName(name)}))
+const originalAndSplittedNames = Array.from(new Set(names)).map(name => ({ name, parts: splitName(name)}))
 await Deno.writeTextFile("./namesAndParts.json", JSON.stringify(originalAndSplittedNames))
 
