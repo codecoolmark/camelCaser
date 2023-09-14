@@ -64,4 +64,9 @@ for (const sourceFolder of Deno.args) {
 const splittedNames = names
     .flatMap(splitName)
     .map(name => name.toLowerCase())
+
 writeStats(countOccurences(splittedNames), "./stats.csv")
+
+const originalAndSplittedNames = names.map(name => ({ name, parts: splitName(name)}))
+await Deno.writeTextFile("./namesAndParts.json", JSON.stringify(originalAndSplittedNames))
+
