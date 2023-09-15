@@ -15,7 +15,7 @@ export async function englishWords() {
 }
 
 export async function methodNames() {
-    const wordFile = await await Deno.open("../analyze-names/stats.csv")
+    const wordFile = await await Deno.open("stats.csv")
     const textDecoder = new TextDecoder()
     const wordSet = new Set()
 
@@ -30,7 +30,7 @@ export async function methodNames() {
 }
 
 export async function methodNamesAndStats() {
-    const wordFile = await await Deno.open("../analyze-names/stats.csv")
+    const wordFile = await await Deno.open("stats.csv")
     const textDecoder = new TextDecoder()
     const stats = new Map()
 

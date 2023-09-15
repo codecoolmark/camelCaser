@@ -1,6 +1,6 @@
 import { convertToCamelCaseDictionary, convertToCamelCaseWeighted } from "./camelCaser.js"
 import { englishWords, methodNames, methodNamesAndStats } from "./dictionaries.js"
-import nameAndParts from "../analyze-names/namesAndParts.json" assert { type: 'json' }
+import nameAndParts from "./namesAndParts.json" assert { type: 'json' }
 
 
 console.log("getlementbyid", convertToCamelCaseDictionary(await englishWords(), "getelementbyid"))

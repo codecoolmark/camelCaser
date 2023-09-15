@@ -1,10 +1,11 @@
 {
-  "name": "analyze-names",
+  "name": "camelcaser",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "analyze": "deno run --allow-read --allow-write script.js .. ~/Documents/react ~/Documents/svelte",
+    "analyze": "deno run --allow-read --allow-write analyze.js . ~/Documents/react ~/Documents/svelte",
+    "score": "deno run --allow-read script.js",
     "test": "deno test test.js"
   },
   "author": "",
