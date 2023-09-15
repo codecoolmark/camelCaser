@@ -1,0 +1,11 @@
+{
+  "name": "explicit-model",
+  "version": "1.0.0",
+  "description": "",
+  "main": "camelCaser.js",
+  "scripts": {
+    "test": "deno run --allow-read script.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
