@@ -70,3 +70,16 @@ export function splitName(name) {
         .flatMap(name => splitKebabCase(name))
         .flatMap(name => splitCamelCase(name))
 }
+
+function capitalize(word) {
+    if (word === "") {
+        return word;
+    }
+    const [firstLetter, ...rest] = word;
+    return firstLetter.toUpperCase() + rest.join("");
+}
+
+export function joinCamelCase(parts) {
+    const [firstWord, ...restWords] = parts
+    return firstWord + restWords.map(word => capitalize(word)).join("");
+}

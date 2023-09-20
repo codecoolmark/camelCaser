@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "analyze": "deno run --allow-read --allow-write analyze.js . ~/Documents/react ~/Documents/svelte",
-    "score": "deno run --allow-read script.js",
+    "score": "deno run --allow-read score.js",
     "test": "deno test test.js"
   },
   "author": "",

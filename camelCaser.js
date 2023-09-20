@@ -1,12 +1,5 @@
+import { joinCamelCase } from './methodNames.js';
 import { splittings } from './splittings.js';
-
-function capitalize(word) {
-    if (word === "") {
-        return word;
-    }
-    const [firstLetter, ...rest] = word;
-    return firstLetter.toUpperCase() + rest.join("");
-}
 
 export function convertToCamelCaseDictionary(words, identifier) {
     const nextBest = function(bestScore, bestSplitting, splitting) {
@@ -38,10 +31,7 @@ export function convertToCamelCase(identifier, nextBest, initialBestSplitting = 
         [bestScore, bestSplitting] = nextBest(bestScore, bestSplitting, splitting)
     }
 
-    const [firstWord, ...restWords] = bestSplitting
-    const camelCaseIdentifier = firstWord + restWords.map(word => capitalize(word)).join("");
-
-    return camelCaseIdentifier
+    return joinCamelCase(bestSplitting)
 }
 
 export function convertToCamelCaseWeighted(wordStats, identifier) {
