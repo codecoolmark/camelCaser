@@ -1,7 +1,7 @@
 import { readline } from "https://deno.land/x/readline@v1.1.0/mod.ts";
 
 export async function englishWords() {
-    const wordFile = await await Deno.open("words_alpha.txt")
+    const wordFile = await Deno.open("words_alpha.txt")
     const textDecoder = new TextDecoder()
     const wordSet = new Set()
 
