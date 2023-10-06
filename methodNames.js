@@ -81,5 +81,5 @@ function capitalize(word) {
 
 export function joinCamelCase(parts) {
     const [firstWord, ...restWords] = parts
-    return firstWord + restWords.map(word => capitalize(word)).join("");
+    return firstWord.toLowerCase() + restWords.map(word => capitalize(word)).join("");
 }
