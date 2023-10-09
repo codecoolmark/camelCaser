@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "analyze": "node data/analyze.js . ../react ../svelte",
+    "gather-data": "node data/analyze.js . ../react ../svelte",
+    "analyze-data": "node inspectData.js",
     "score": "deno run --allow-read score.js",
     "test": "deno test test.js",
     "tensorflow": "node tensorflow.js"
@@ -17,6 +18,7 @@
     "@tensorflow/tfjs-node": "^4.11.0",
     "acorn": "^8.10.0",
     "acorn-loose": "^8.3.0",
-    "acorn-walk": "^8.2.0"
+    "acorn-walk": "^8.2.0",
+    "nodeplotlib": "^1.1.2"
   }
 }

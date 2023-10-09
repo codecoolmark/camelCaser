@@ -1,0 +1,37 @@
+import { plot } from "nodeplotlib"
+import { methodNames } from "./data/dictionaries.js"
+import { count, numericalHistogram, numericalMax } from "./data/arrays.js"
+import { splitCamelCase } from "./data/methodNames.js"
+
+const names = await methodNames() 
+console.log("Data contains", names.length, "method names.")
+
+const lengths = names.map(name => name.length)
+
+const longestName = numericalMax(lengths)
+console.log("Longest name is", longestName, "charcters.")
+
+const methodLengths = count(0, longestName)
+const counts = numericalHistogram(lengths)
+
+plot([{x: methodLengths, y: counts, type: "bar"}], { title: "Distribution of method name lengths" })
+
+const numberOfParts = names.map(name => splitCamelCase(name).length)
+const maximumNumberOfParts = numericalMax(numberOfParts)
+
+console.log("Maximum number of parts", maximumNumberOfParts)
+
+const partNumbers = count(0, maximumNumberOfParts)
+const partCounts = numericalHistogram(numberOfParts)
+
+plot([{x: partNumbers, y: partCounts, type: "bar"}], { title: "Distribution of the number of parts" })
+
+const parts = names.flatMap(name => splitCamelCase(name))
+const partLengths = parts.map(part => part.length)
+const maximumPartLength = numericalMax(partLengths)
+
+console.log("The longest part is", maximumPartLength, "characters long")
+
+const partLengthCounts = numericalHistogram(partLengths)
+
+plot([{x: count(0, maximumPartLength), y: partLengthCounts, type: "bar"}], { title: "Distribution of part lengths" })
