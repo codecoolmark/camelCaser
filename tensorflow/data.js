@@ -1,16 +1,19 @@
-import namesAndParts from "../namesAndParts.json"  assert { type: "json" }
 import * as tf from '@tensorflow/tfjs-node';
 
-
-export function allPairs() {
-    return namesAndParts.map(({ name }) => [name.toLowerCase(), name])
+export function* windows(windowLength, string) {
+    for (let offset = 0; (offset + windowLength) <= string.length; offset++) {
+        yield string.substring(offset, offset + windowLength)
+    }
 }
 
-export function allPairsOfLength(min, max) {
-    return allPairs().filter(([name, _]) => min < name.length < max)
+export function trainingAndValidationSet(pairs, trainingSize, validationSize) {
+    const [trainingSet, rest] = nPairs(trainingSize, pairs)
+    const [validationSet, _] = nPairs(validationSize, rest)
+
+    return [trainingSet, validationSet]
 }
 
-export function nPairs(number, pairs = allPairs()) {
+function nPairs(number, pairs) {
     const stack = [...pairs]
     const choosenPairs = []
 
@@ -19,19 +22,7 @@ export function nPairs(number, pairs = allPairs()) {
         choosenPairs.push(choosenPair)
     }
 
-    return choosenPairs
-}
-
-export function maxInputLength(pairs) {
-    return Math.max(...pairs.flatMap(([name, original]) => [name.length, original.length]))
-}
-
-export function normalize(pairs, toLength) {
-    return pairs.map(([name, original]) => [name.padEnd(toLength, ' '), original.padEnd(toLength, ' ')])
-}
-
-export function shorten(pairs, length) {
-    return pairs.map(([a, b]) => [a.substring(0, length), b.substring(0, length)])
+    return [choosenPairs, stack]
 }
 
 export function produceCharacterTable(pairs) {
