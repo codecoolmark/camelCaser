@@ -1,18 +1,26 @@
 import { open } from "node:fs/promises"
 
-export async function englishWords() {
-    const wordFile = await open("words_alpha.txt")
-    const wordSet = new Set()
+async function readLines(file) {
+    const wordFile = await open(file)
+    const words = new Array()
 
     for await (const line of wordFile.readLines()) {
-        wordSet.add(line.trim());
+        words.push(line.trim());
     }
 
-    wordFile.close();
-    return wordSet;
+    wordFile.close()
+    return words
+}
+
+export async function englishWords() {
+    return new Set(await readLines("words_alpha.txt"))
 }
 
 export async function methodNames() {
+    return await readLines("names.csv")
+}
+
+export async function methodNameParts() {
     const wordFile = await open("stats.csv")
     const wordSet = new Set()
 
