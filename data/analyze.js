@@ -1,4 +1,4 @@
-import { opendir, readFile, open } from "node:fs/promises"
+import { opendir, readFile, open, writeFile } from "node:fs/promises"
 import * as path from "node:path"
 import * as acorn from "acorn-loose"
 import * as walk from "acorn-walk"
@@ -77,7 +77,5 @@ const splittedNames = names
     .map(name => name.toLowerCase())
 
 await writeStats(countOccurences(splittedNames), "./stats.csv")
-
-//const originalAndSplittedNames = Array.from(new Set(names)).map(name => ({ name, parts: splitName(name)}))
-//await Deno.writeTextFile("./namesAndParts.json", JSON.stringify(originalAndSplittedNames))
+await writeFile("./names.csv", Array.from(new Set(names)).map(name => name + "\n"))
 

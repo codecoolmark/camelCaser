@@ -1,13 +1,11 @@
-import { readline } from "https://deno.land/x/readline@v1.1.0/mod.ts";
+import { open } from "node:fs/promises"
 
 export async function englishWords() {
-    const wordFile = await Deno.open("words_alpha.txt")
-    const textDecoder = new TextDecoder()
+    const wordFile = await open("words_alpha.txt")
     const wordSet = new Set()
 
-    for await (const line of readline(wordFile)) {
-        const trimmedLine = textDecoder.decode(line).trim();
-        wordSet.add(trimmedLine);
+    for await (const line of wordFile.readLines()) {
+        wordSet.add(line.trim());
     }
 
     wordFile.close();
@@ -15,12 +13,10 @@ export async function englishWords() {
 }
 
 export async function methodNames() {
-    const wordFile = await await Deno.open("stats.csv")
-    const textDecoder = new TextDecoder()
+    const wordFile = await open("stats.csv")
     const wordSet = new Set()
 
-    for await (const lineBytes of readline(wordFile)) {
-        const line = textDecoder.decode(lineBytes);
+    for await (const line of wordFile.readlines()) {
         const [word, _] = line.split(",")
         wordSet.add(word);
     }
@@ -30,12 +26,10 @@ export async function methodNames() {
 }
 
 export async function methodNamesAndStats() {
-    const wordFile = await await Deno.open("stats.csv")
-    const textDecoder = new TextDecoder()
+    const wordFile = await open("stats.csv")
     const stats = new Map()
 
-    for await (const lineBytes of readline(wordFile)) {
-        const line = textDecoder.decode(lineBytes);
+    for await (const line of wordFile.readlines()) {
         const [word, number] = line.split(",")
         stats.set(word, Number.parseInt(number));
     }
