@@ -1,15 +1,15 @@
 import { plot } from "nodeplotlib"
 import { methodNames } from "./data/dictionaries.js"
-import { count, numericalHistogram, numericalMax } from "./data/arrays.js"
+import { average, count, numericalHistogram, numericalMax, std } from "./data/arrays.js"
 import { splitCamelCase } from "./data/methodNames.js"
 
 const names = await methodNames() 
-console.log("Data contains", names.length, "method names.")
-
+console.log("Data contains", names.length, "unique method names.")
 const lengths = names.map(name => name.length)
 
 const longestName = numericalMax(lengths)
 console.log("Longest name is", longestName, "charcters.")
+console.log("The average method name length is", average(lengths))
 
 const methodLengths = count(0, longestName)
 const counts = numericalHistogram(lengths)
@@ -20,6 +20,7 @@ const numberOfParts = names.map(name => splitCamelCase(name).length)
 const maximumNumberOfParts = numericalMax(numberOfParts)
 
 console.log("Maximum number of parts", maximumNumberOfParts)
+console.log("The average number of parts is", average(numberOfParts))
 
 const partNumbers = count(0, maximumNumberOfParts)
 const partCounts = numericalHistogram(numberOfParts)
@@ -31,7 +32,8 @@ const partLengths = parts.map(part => part.length)
 const maximumPartLength = numericalMax(partLengths)
 
 console.log("The longest part is", maximumPartLength, "characters long")
+console.log("The average part length is", average(partLengths), "with a std of", std(partLengths))
 
 const partLengthCounts = numericalHistogram(partLengths)
 
-plot([{x: count(0, maximumPartLength), y: partLengthCounts, type: "bar"}], { title: "Distribution of part lengths" })
+plot([{ x: count(0, maximumPartLength), y: partLengthCounts, type: "bar" }], { title: "Distribution of part lengths" })

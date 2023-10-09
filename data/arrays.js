@@ -29,3 +29,14 @@ export function numericalHistogram(numbers) {
 
     return bins
 }
+
+export function average(numbers) {
+    const sum = numbers.reduce((a, b) => a + b)
+    return sum / numbers.length
+}
+
+export function std(numbers) {
+    const avg = average(numbers)
+    const stdSum = numbers.map(number => (number - avg) ** 2).reduce((a, b) => a + b)
+    return stdSum / numbers.length
+}
