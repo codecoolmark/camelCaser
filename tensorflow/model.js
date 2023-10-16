@@ -1,6 +1,6 @@
 import * as tf from '@tensorflow/tfjs-node';
 
-export function rnnModel(hiddenSize, inputSize, numberOfChars) {
+export function string2StringModel(hiddenSize, inputSize, numberOfChars) {
     const model = tf.sequential();
 
     // input layer
@@ -29,4 +29,40 @@ export function rnnModel(hiddenSize, inputSize, numberOfChars) {
     });
 
     return model;
+}
+
+export function string2UppercaseIndicesModel(hiddenSize, inputSize, numberOfChars) {
+    
+    const model = tf.sequential();
+
+    model.add(tf.layers.bidirectional({ 
+        layer: tf.layers.lstm({ 
+            units: Math.floor(hiddenSize / 2)
+        }),
+        inputShape: [inputSize, numberOfChars]
+    }))
+
+    model.add(tf.layers.dropout({ rate: 0.5 }))
+
+    model.add(tf.layers.dense({ 
+        units: hiddenSize,
+        activation: "relu",
+    }))
+
+    model.add(tf.layers.dropout({ rate: 0.5 }))
+
+    model.add(tf.layers.dense({ 
+        units: inputSize,
+        activation: "sigmoid"
+    }))
+    
+    model.summary()
+
+    model.compile({
+        loss: 'binaryCrossentropy',
+        optimizer: 'adam',
+        metrics: ['accuracy']
+    })
+
+    return model
 }

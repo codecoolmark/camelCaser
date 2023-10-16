@@ -1,6 +1,7 @@
 import { methodNames } from "./data/dictionaries.js"
 import { decodeStrings, encodeStrings, produceCharacterTable, windows, trainingAndValidationSet } from "./tensorflow/data.js";
-import { rnnModel } from "./tensorflow/model.js"
+import { string2StringModel } from "./tensorflow/model.js"
+import { writeFile } from 'node:fs/promises';
 
 const windowLength = 10
 
@@ -8,9 +9,10 @@ const names = await methodNames();
 const windowedNames = names.flatMap(name => Array.from(windows(windowLength, name)))
 const pairs = windowedNames.map(name => [name.toLowerCase(), name])
 
-const [trainingData, validationData] = trainingAndValidationSet(pairs, 6000, 12000)
+const [trainingData, validationData] = trainingAndValidationSet(pairs, 40000, 100000)
 
 const charTable = produceCharacterTable(pairs)
+writeFile("chartable.json", JSON.stringify(charTable))
 const numberOfCharacters = Object.entries(charTable).length
 
 const encodedTrainingInput = encodeStrings(trainingData.map(([input, _]) => input), charTable)
@@ -24,16 +26,18 @@ console.log(encodedTrainingOutput.shape)
 console.log(encodedValidationInput.shape)
 console.log(encodedValidationOutput.shape)
 
-const model = rnnModel(128, windowLength, numberOfCharacters);
+const model = string2StringModel(128, windowLength, numberOfCharacters);
 
-const batchSize = 128
+const batchSize = 20
 
 const history = await model.fit(encodedTrainingInput, encodedTrainingOutput, {
-    epochs: 60,
+    epochs: 100,
     batchSize,
     validationData: [encodedValidationInput, encodedValidationOutput],
     yieldEvery: 'epoch'
 });
+
+model.save("file://string2string-model")
 
 const testStrings = [ 
     validationData[0], 
