@@ -54,6 +54,29 @@ export function encodeStrings(normalizedStrings, charTable) {
     return buffer.toTensor().as3D(normalizedStrings.length, stringLength, Object.entries(charTable).length);
 }
 
+export function encodeUppercaseIndices(strings) {
+    const stringLength = strings[0].length
+    const buffer = tf.buffer([strings.length, stringLength])
+
+    for (let stringIndex = 0; stringIndex < strings.length; stringIndex++) {
+        const numberOfUppercaseLetters = Array.from(strings[stringIndex]).filter(character => character === character.toUpperCase()).length
+        for (let characterIndex = 0; characterIndex < stringLength; characterIndex++) {
+            const character = strings[stringIndex][characterIndex]
+            buffer.set(character === character.toUpperCase() ? 1 : 0, stringIndex, characterIndex)
+        }
+    }
+
+    return buffer.toTensor().as2D(strings.length, stringLength)
+}
+
+export async function decodeUppercaseIndices(tensor, strings, threshold = 0.1) {
+    const tensorData = await tensor.array()
+    return strings.map((string, stringIndex) => 
+        Array.from(string)
+            .map((char, charIndex) => tensorData[stringIndex][charIndex] >= threshold ? char.toUpperCase() : char)
+            .join("")) 
+}
+
 function reverseTable(charTable) {
     const charByIndex = {};
     for (const char in charTable) {
