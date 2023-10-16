@@ -40,3 +40,15 @@ export function std(numbers) {
     const stdSum = numbers.map(number => (number - avg) ** 2).reduce((a, b) => a + b)
     return stdSum / numbers.length
 }
+
+export function shuffle(data) {
+    const stack = [...data]
+    const result = []
+
+    while (stack.length != 0) {
+        const [element] = stack.splice(Math.floor(Math.random() * stack.length), 1)
+        result.push(element)
+    }
+
+    return data;
+}
