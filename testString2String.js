@@ -1,5 +1,5 @@
 import * as tf from '@tensorflow/tfjs-node';
-import { decodeStrings, decodeUppercaseIndices, encodeStrings, encodeUppercaseIndices, windows } from "./tensorflow/data.js"
+import { decodeStrings, encodeStrings, windows } from "./tensorflow/data.js"
 import { readFile } from 'node:fs/promises';
 import { methodNames } from './data/dictionaries.js';
 
@@ -7,10 +7,6 @@ import { methodNames } from './data/dictionaries.js';
 const windowLength = 10
 const model = await tf.loadLayersModel("file://string2string-model/model.json");
 const charTable = await JSON.parse(await readFile("chartable.json", { encoding: 'utf8' }))
-
-const buffer = encodeUppercaseIndices(["getElementById", "filterBooksByTitle"])
-const result = await decodeUppercaseIndices(buffer, ["getelementbyid", "filterbooksbytitle"])
-console.log(result)
 
 function unmerge(windows) {
     const finalLength = windows.length + windows[0].length - 1

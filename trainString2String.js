@@ -9,7 +9,7 @@ const names = await methodNames();
 const windowedNames = names.flatMap(name => Array.from(windows(windowLength, name)))
 const pairs = windowedNames.map(name => [name.toLowerCase(), name])
 
-const [trainingData, validationData] = trainingAndValidationSet(pairs, 40000, 100000)
+const [trainingData, validationData] = trainingAndValidationSet(pairs, 40000, 2000)
 
 const charTable = produceCharacterTable(pairs)
 writeFile("chartable.json", JSON.stringify(charTable))
