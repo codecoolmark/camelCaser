@@ -4,17 +4,22 @@ import { string2StringModel } from "./tensorflow/model.js"
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { modelFolder } from "./tensorflow/io.js"
+import { filterAlphabetic } from "./data/methodNames.js"
+import { shuffle } from "./data/arrays.js"
+
 
 const windowLength = 10
 const folder = await modelFolder("string2string") 
-const names = await methodNames();
-const windowedNames = names.flatMap(name => Array.from(windows(windowLength, name)))
+const names = filterAlphabetic(await methodNames());
+const windowedNames = Array.from(new Set(names.flatMap(name => Array.from(windows(windowLength, name)))))
 const pairs = windowedNames.map(name => [name.toLowerCase(), name])
 
-const [trainingData, validationData] = trainingAndValidationSet(pairs, 80000, 2000)
+console.log(pairs.length)
+
+const [trainingData, validationData] = shuffle(trainingAndValidationSet(pairs, 50000, 2000))
 
 const charTable = produceCharacterTable(names)
-writeFile(join(folder, "chartable-string2string.json"), JSON.stringify(charTable))
+writeFile(join(folder, "chartable.json"), JSON.stringify(charTable))
 const numberOfCharacters = Object.entries(charTable).length
 
 const encodedTrainingInput = encodeStrings(trainingData.map(([input, _]) => input), charTable)
@@ -28,12 +33,12 @@ console.log(encodedTrainingOutput.shape)
 console.log(encodedValidationInput.shape)
 console.log(encodedValidationOutput.shape)
 
-const model = string2StringModel(160, windowLength, numberOfCharacters);
+const model = string2StringModel(256, windowLength, numberOfCharacters);
 
 const batchSize = 32
 
 const history = await model.fit(encodedTrainingInput, encodedTrainingOutput, {
-    epochs: 10,
+    epochs: 100,
     batchSize,
     validationData: [encodedValidationInput, encodedValidationOutput],
     yieldEvery: 'epoch'

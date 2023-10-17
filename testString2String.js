@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { methodNames } from './data/dictionaries.js';
 import { modelFolder } from './tensorflow/io.js';
 import { join } from 'node:path';
+import { filterAlphabetic } from './data/methodNames.js';
 
 const windowLength = 10
 const folder = await modelFolder("string2string")
@@ -50,7 +51,7 @@ const convertToCamelcase = function(name) {
 
 console.log(convertToCamelcase("filterbooksbytitle"))
 
-const names = await methodNames()
+const names = filterAlphabetic(await methodNames())
 const longEnoughNames = names.filter(name => name.length > windowLength)
 const results = longEnoughNames.map(name => ({ name, prediction: convertToCamelcase(name.toLowerCase())}))
 const correctAnswers = results.filter(({ name, prediction }) => name === prediction)

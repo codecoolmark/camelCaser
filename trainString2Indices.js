@@ -10,15 +10,15 @@ const windowLength = 10
 const folder = await modelFolder("string2indices") 
 
 const names = await methodNames();
-const windowedNames = names.flatMap(name => Array.from(windows(windowLength, name)))
+const windowedNames = shuffle(Array.from(new Set(names.flatMap(name => Array.from(windows(windowLength, name))))))
 const pairs = windowedNames.map(name => [name.toLowerCase(), name])
 
 console.log(pairs.length)
 
-const [trainingData, validationData] = shuffle(trainingAndValidationSet(pairs, 80000, 1000))
+const [trainingData, validationData] = trainingAndValidationSet(pairs, 80000, 1000)
 
 const charTable = produceCharacterTable(names)
-writeFile(join(folder, "chartable-string2indices.json"), JSON.stringify(charTable))
+writeFile(join(folder, "chartable.json"), JSON.stringify(charTable))
 const numberOfCharacters = Object.entries(charTable).length
 
 const encodedTrainingInput = encodeStrings(trainingData.map(([input, _]) => input), charTable)
@@ -26,7 +26,7 @@ const encodedTrainingOutput = encodeUppercaseIndices(trainingData.map(([_, outpu
 const encodedValidationInput = encodeStrings(validationData.map(([input, _]) => input), charTable)
 const encodedValidationOutput = encodeUppercaseIndices(validationData.map(([_, output]) => output))
 
-const model = string2UppercaseIndicesModel(140, windowLength, numberOfCharacters)
+const model = string2UppercaseIndicesModel(200, windowLength, numberOfCharacters)
 
 const batchSize = 32
 let validationLossReduction = 1.0
