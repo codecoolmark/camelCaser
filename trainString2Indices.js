@@ -1,10 +1,13 @@
 import { methodNames } from "./data/dictionaries.js"
 import { encodeStrings, produceCharacterTable, windows, trainingAndValidationSet, encodeUppercaseIndices } from "./tensorflow/data.js";
 import { string2UppercaseIndicesModel } from "./tensorflow/model.js"
-import { writeFile } from 'node:fs/promises';
-import { shuffle } from "./data/arrays.js";
+import { writeFile } from 'node:fs/promises'
+import { shuffle } from "./data/arrays.js"
+import { join } from 'node:path'
+import { modelFolder } from "./tensorflow/io.js"
 
 const windowLength = 10
+const folder = await modelFolder("string2indices") 
 
 const names = await methodNames();
 const windowedNames = names.flatMap(name => Array.from(windows(windowLength, name)))
@@ -14,8 +17,8 @@ console.log(pairs.length)
 
 const [trainingData, validationData] = shuffle(trainingAndValidationSet(pairs, 80000, 1000))
 
-const charTable = produceCharacterTable(pairs)
-writeFile("chartable.json", JSON.stringify(charTable))
+const charTable = produceCharacterTable(names)
+writeFile(join(folder, "chartable-string2indices.json"), JSON.stringify(charTable))
 const numberOfCharacters = Object.entries(charTable).length
 
 const encodedTrainingInput = encodeStrings(trainingData.map(([input, _]) => input), charTable)
@@ -39,5 +42,5 @@ while (validationLossReduction > 0.01) {
 
     validationLossReduction = (history.history.val_loss[0] - history.history.val_loss[epochs - 1]) / history.history.val_loss[0]
     console.log("improvement in validation loss", validationLossReduction)
-    model.save("file://string2indices-model")
+    model.save(`file://${folder}/model`)
 }

@@ -1,18 +1,20 @@
 import { methodNames } from "./data/dictionaries.js"
 import { decodeStrings, encodeStrings, produceCharacterTable, windows, trainingAndValidationSet } from "./tensorflow/data.js";
 import { string2StringModel } from "./tensorflow/model.js"
-import { writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
+import { modelFolder } from "./tensorflow/io.js"
 
 const windowLength = 10
-
+const folder = await modelFolder("string2string") 
 const names = await methodNames();
 const windowedNames = names.flatMap(name => Array.from(windows(windowLength, name)))
 const pairs = windowedNames.map(name => [name.toLowerCase(), name])
 
-const [trainingData, validationData] = trainingAndValidationSet(pairs, 40000, 2000)
+const [trainingData, validationData] = trainingAndValidationSet(pairs, 80000, 2000)
 
-const charTable = produceCharacterTable(pairs)
-writeFile("chartable.json", JSON.stringify(charTable))
+const charTable = produceCharacterTable(names)
+writeFile(join(folder, "chartable-string2string.json"), JSON.stringify(charTable))
 const numberOfCharacters = Object.entries(charTable).length
 
 const encodedTrainingInput = encodeStrings(trainingData.map(([input, _]) => input), charTable)
@@ -26,18 +28,18 @@ console.log(encodedTrainingOutput.shape)
 console.log(encodedValidationInput.shape)
 console.log(encodedValidationOutput.shape)
 
-const model = string2StringModel(128, windowLength, numberOfCharacters);
+const model = string2StringModel(160, windowLength, numberOfCharacters);
 
-const batchSize = 20
+const batchSize = 32
 
 const history = await model.fit(encodedTrainingInput, encodedTrainingOutput, {
-    epochs: 100,
+    epochs: 10,
     batchSize,
     validationData: [encodedValidationInput, encodedValidationOutput],
     yieldEvery: 'epoch'
 });
 
-model.save("file://string2string-model")
+model.save(`file://${folder}/model`)
 
 const testStrings = [ 
     validationData[0], 

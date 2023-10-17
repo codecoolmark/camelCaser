@@ -2,11 +2,13 @@ import * as tf from '@tensorflow/tfjs-node';
 import { decodeStrings, encodeStrings, windows } from "./tensorflow/data.js"
 import { readFile } from 'node:fs/promises';
 import { methodNames } from './data/dictionaries.js';
-
+import { modelFolder } from './tensorflow/io.js';
+import { join } from 'node:path';
 
 const windowLength = 10
-const model = await tf.loadLayersModel("file://string2string-model/model.json");
-const charTable = await JSON.parse(await readFile("chartable.json", { encoding: 'utf8' }))
+const folder = await modelFolder("string2string")
+const model = await tf.loadLayersModel(`file://${folder}/model/model.json`);
+const charTable = await JSON.parse(await readFile(join(folder, "chartable.json"), { encoding: 'utf8' }))
 
 function unmerge(windows) {
     const finalLength = windows.length + windows[0].length - 1

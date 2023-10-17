@@ -25,8 +25,8 @@ function nPairs(number, pairs) {
     return [choosenPairs, stack]
 }
 
-export function produceCharacterTable(pairs) {
-    const allCharacters = new Set(pairs.flatMap(([name, original]) => [...name, ...original]))
+export function produceCharacterTable(names) {
+    const allCharacters = new Set(names.flatMap((name) => [...name, ...name.toLowerCase()]))
     const table = {}
     let lastIndex = 0;
     for (const char of allCharacters.values()) {
@@ -59,7 +59,6 @@ export function encodeUppercaseIndices(strings) {
     const buffer = tf.buffer([strings.length, stringLength])
 
     for (let stringIndex = 0; stringIndex < strings.length; stringIndex++) {
-        const numberOfUppercaseLetters = Array.from(strings[stringIndex]).filter(character => character === character.toUpperCase()).length
         for (let characterIndex = 0; characterIndex < stringLength; characterIndex++) {
             const character = strings[stringIndex][characterIndex]
             buffer.set(character === character.toUpperCase() ? 1 : 0, stringIndex, characterIndex)
