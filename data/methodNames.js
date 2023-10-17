@@ -83,3 +83,8 @@ export function joinCamelCase(parts) {
     const [firstWord, ...restWords] = parts
     return firstWord.toLowerCase() + restWords.map(word => capitalize(word)).join("");
 }
+
+export function filterAlphabetic(names) {
+    const regex = new RegExp("^[a-zA-Z]+$", "g")
+    return names.filter(name => regex.test(name))
+}
