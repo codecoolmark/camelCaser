@@ -8,10 +8,11 @@
     "gather-data": "node data/analyze.js . ../react ../svelte",
     "analyze-data": "node inspectData.js",
     "score": "deno run --allow-read score.js",
-    "testString2String": "node testString2String.js",
+    "testString2String": "node tensorflow/string2String/testString2String.js",
     "trainString2String": "node trainString2String.js",
     "trainString2Indices": "node trainString2Indices.js",
-    "testString2Indices": "node testString2Indices.js"
+    "testString2Indices": "node testString2Indices.js",
+    "converter": "node converter.js"
   },
   "author": "",
   "license": "ISC",

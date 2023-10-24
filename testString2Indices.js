@@ -5,9 +5,11 @@ import { methodNames } from './data/dictionaries.js';
 import { modelFolder } from './tensorflow/io.js';
 import { join } from 'node:path';
 
+import * as readline from 'node:readline/promises';
+import { stdin as input, stdout as output } from 'node:process';
 
 const windowLength = 10
-const folder = await modelFolder("string2string")
+const folder = await modelFolder("string2indices")
 const model = await tf.loadLayersModel(`file://${folder}/model/model.json`);
 const charTable = await JSON.parse(await readFile(join(folder, "chartable.json"), { encoding: 'utf8' }))
 
@@ -45,7 +47,7 @@ const convertToCamelcase = async function(name) {
     const nameWindows = Array.from(windows(windowLength, name))
     const encodedWindows = encodeStrings(nameWindows, charTable)
     const prediction = model.predict(encodedWindows)
-    const predictedWindows = await decodeUppercaseIndices(prediction, nameWindows, 0.9)
+    const predictedWindows = await decodeUppercaseIndices(prediction, nameWindows, 0.5)
     return unmerge(predictedWindows)
 }
 
@@ -64,3 +66,11 @@ const incorrectAnswers = results.filter(({ name, prediction }) => name !== predi
 console.log(correctAnswers.length / longEnoughNames.length)
 console.log(incorrectAnswers.slice(0, 20))
 console.log(correctAnswers.slice(0, 10))
+
+let rlInput = null;
+const rl = readline.createInterface({ input, output });
+
+do {
+    rlInput = await rl.question('camel case\n');
+    console.log(await convertToCamelcase(rlInput));
+} while (rlInput !== ".exit")

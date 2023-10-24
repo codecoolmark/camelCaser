@@ -1,12 +1,10 @@
-import * as tf from '@tensorflow/tfjs-node';
-import { decodeStrings, encodeStrings, windows } from "./tensorflow/data.js"
-import { readFile } from 'node:fs/promises';
-import { methodNames } from './data/dictionaries.js';
-import { modelFolder } from './tensorflow/io.js';
+import { modelFolder } from "../io.js";
 import { join } from 'node:path';
-import { filterAlphabetic } from './data/methodNames.js';
+import * as tf from '@tensorflow/tfjs-node';
+import { decodeStrings, encodeStrings, windows } from "../data.js"
+import { readFile } from 'node:fs/promises';
 
-const windowLength = 10
+export const windowLength = 10
 const folder = await modelFolder("string2string")
 const model = await tf.loadLayersModel(`file://${folder}/model/model.json`);
 const charTable = await JSON.parse(await readFile(join(folder, "chartable.json"), { encoding: 'utf8' }))
@@ -41,21 +39,10 @@ function unmerge(windows) {
     return result
 }
 
-const convertToCamelcase = function(name) {
+export function convertToCamelcase(name) {
     const nameWindows = Array.from(windows(windowLength, name))
     const encodedWindows = encodeStrings(nameWindows, charTable)
     const prediction = model.predict(encodedWindows)
     const predictedWindows = decodeStrings(prediction, charTable)
     return unmerge(predictedWindows)
 }
-
-console.log(convertToCamelcase("filterbooksbytitle"))
-
-const names = filterAlphabetic(await methodNames())
-const longEnoughNames = names.filter(name => name.length > windowLength)
-const results = longEnoughNames.map(name => ({ name, prediction: convertToCamelcase(name.toLowerCase())}))
-const correctAnswers = results.filter(({ name, prediction }) => name === prediction)
-const incorrectAnswers = results.filter(({ name, prediction }) => name !== prediction)
-console.log(correctAnswers.length / longEnoughNames.length)
-console.log(incorrectAnswers.slice(0, 10))
-console.log(correctAnswers.slice(0, 10))

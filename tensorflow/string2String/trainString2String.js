@@ -1,11 +1,11 @@
-import { methodNames } from "./data/dictionaries.js"
-import { decodeStrings, encodeStrings, produceCharacterTable, windows, trainingAndValidationSet } from "./tensorflow/data.js";
-import { string2StringModel } from "./tensorflow/model.js"
+import { methodNames } from "../../data/dictionaries.js"
+import { decodeStrings, encodeStrings, produceCharacterTable, windows, trainingAndValidationSet } from "../data.js";
+import { string2StringModel } from "../model.js"
 import { writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { modelFolder } from "./tensorflow/io.js"
-import { filterAlphabetic } from "./data/methodNames.js"
-import { shuffle } from "./data/arrays.js"
+import { modelFolder } from "../io.js"
+import { filterAlphabetic } from "../../data/methodNames.js"
+import { shuffle } from "../../data/arrays.js"
 
 
 const windowLength = 10
@@ -16,7 +16,7 @@ const pairs = windowedNames.map(name => [name.toLowerCase(), name])
 
 console.log(pairs.length)
 
-const [trainingData, validationData] = shuffle(trainingAndValidationSet(pairs, 50000, 2000))
+const [trainingData, validationData] = shuffle(trainingAndValidationSet(pairs, 20000, 2000))
 
 const charTable = produceCharacterTable(names)
 writeFile(join(folder, "chartable.json"), JSON.stringify(charTable))
@@ -38,7 +38,7 @@ const model = string2StringModel(256, windowLength, numberOfCharacters);
 const batchSize = 32
 
 const history = await model.fit(encodedTrainingInput, encodedTrainingOutput, {
-    epochs: 100,
+    epochs: 200,
     batchSize,
     validationData: [encodedValidationInput, encodedValidationOutput],
     yieldEvery: 'epoch'
