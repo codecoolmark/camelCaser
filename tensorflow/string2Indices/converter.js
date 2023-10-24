@@ -1,14 +1,10 @@
 import * as tf from '@tensorflow/tfjs-node';
-import { decodeUppercaseIndices, encodeStrings, windows } from "./tensorflow/data.js"
+import { decodeUppercaseIndices, encodeStrings, windows } from "../data.js"
 import { readFile } from 'node:fs/promises';
-import { methodNames } from './data/dictionaries.js';
-import { modelFolder } from './tensorflow/io.js';
+import { modelFolder } from '../io.js';
 import { join } from 'node:path';
 
-import * as readline from 'node:readline/promises';
-import { stdin as input, stdout as output } from 'node:process';
-
-const windowLength = 10
+export const windowLength = 10
 const folder = await modelFolder("string2indices")
 const model = await tf.loadLayersModel(`file://${folder}/model/model.json`);
 const charTable = await JSON.parse(await readFile(join(folder, "chartable.json"), { encoding: 'utf8' }))
@@ -43,34 +39,10 @@ function unmerge(windows) {
     return result
 }
 
-const convertToCamelcase = async function(name) {
+export async function convertToCamelcase(name) {
     const nameWindows = Array.from(windows(windowLength, name))
     const encodedWindows = encodeStrings(nameWindows, charTable)
     const prediction = model.predict(encodedWindows)
     const predictedWindows = await decodeUppercaseIndices(prediction, nameWindows, 0.5)
     return unmerge(predictedWindows)
 }
-
-console.log(await convertToCamelcase("getelementbyid"))
-
-const names = await methodNames()
-const longEnoughNames = names.filter(name => name.length > windowLength)
-console.log(longEnoughNames.length)
-
-console.log(await convertToCamelcase("addeventlistener"))
-console.log(await convertToCamelcase("sendbeacon"))
-
-const results = await Promise.all(longEnoughNames.map(async name => ({ name, prediction: await convertToCamelcase(name.toLowerCase())})))
-const correctAnswers = results.filter(({ name, prediction }) => name === prediction)
-const incorrectAnswers = results.filter(({ name, prediction }) => name !== prediction)
-console.log(correctAnswers.length / longEnoughNames.length)
-console.log(incorrectAnswers.slice(0, 20))
-console.log(correctAnswers.slice(0, 10))
-
-let rlInput = null;
-const rl = readline.createInterface({ input, output });
-
-do {
-    rlInput = await rl.question('camel case\n');
-    console.log(await convertToCamelcase(rlInput));
-} while (rlInput !== ".exit")

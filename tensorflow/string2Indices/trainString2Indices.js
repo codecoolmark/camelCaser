@@ -1,10 +1,10 @@
-import { methodNames } from "./data/dictionaries.js"
-import { encodeStrings, produceCharacterTable, windows, trainingAndValidationSet, encodeUppercaseIndices } from "./tensorflow/data.js";
-import { string2UppercaseIndicesModel } from "./tensorflow/model.js"
+import { methodNames } from "../../data/dictionaries.js"
+import { encodeStrings, produceCharacterTable, windows, trainingAndValidationSet, encodeUppercaseIndices } from "../data.js";
+import { string2UppercaseIndicesModel } from "../model.js"
 import { writeFile } from 'node:fs/promises'
-import { shuffle } from "./data/arrays.js"
+import { shuffle } from "../../data/arrays.js"
 import { join } from 'node:path'
-import { modelFolder } from "./tensorflow/io.js"
+import { modelFolder } from "../io.js"
 
 const windowLength = 10
 const folder = await modelFolder("string2indices") 
