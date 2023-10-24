@@ -66,3 +66,36 @@ export function string2UppercaseIndicesModel(hiddenSize, inputSize, numberOfChar
 
     return model
 }
+
+export function string2UppercaseIndicesModelParts(hiddenSize, inputSize, numberOfChars) {
+    
+    const model = tf.sequential();
+
+    model.add(tf.layers.flatten({
+        inputShape: [inputSize, numberOfChars]
+    }))
+
+    model.add(tf.layers.dense({
+        units: hiddenSize
+    }))
+
+    model.add(tf.layers.dense({
+        units: hiddenSize
+    }))
+
+
+    model.add(tf.layers.dense({ 
+        units: inputSize,
+        activation: "sigmoid"
+    }))
+    
+    model.summary()
+
+    model.compile({
+        loss: 'binaryCrossentropy',
+        optimizer: tf.train.adam(),
+        metrics: ['accuracy'],
+    })
+
+    return model
+}
