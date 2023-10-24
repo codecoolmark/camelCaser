@@ -6,6 +6,15 @@ export function* windows(windowLength, string) {
     }
 }
 
+export function* parts(partLength, string) {
+    let rest = string
+    while(rest.length > 0) {
+        const next = rest.substring(0, partLength).padEnd(partLength, ' ')
+        rest = rest.substring(partLength)
+        yield next
+    }
+}
+
 export function trainingAndValidationSet(pairs, trainingSize, validationSize) {
     const [trainingSet, rest] = nPairs(trainingSize, pairs)
     const [validationSet, _] = nPairs(validationSize, rest)
