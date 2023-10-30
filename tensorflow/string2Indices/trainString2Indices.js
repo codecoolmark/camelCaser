@@ -1,4 +1,4 @@
-import { methodNames } from "../../data/dictionaries.js"
+import { alphabeticMethodNames, methodNames } from "../../data/dictionaries.js"
 import { encodeStrings, produceCharacterTable, windows, trainingAndValidationSet, encodeUppercaseIndices } from "../data.js";
 import { string2UppercaseIndicesModel } from "../model.js"
 import { writeFile } from 'node:fs/promises'
@@ -9,13 +9,15 @@ import { modelFolder } from "../io.js"
 const windowLength = 10
 const folder = await modelFolder("string2indices") 
 
-const names = await methodNames();
+const names = await alphabeticMethodNames();
 const windowedNames = shuffle(Array.from(new Set(names.flatMap(name => Array.from(windows(windowLength, name))))))
 const pairs = windowedNames.map(name => [name.toLowerCase(), name])
 
-console.log(pairs.length)
+const numberOfPairs = pairs.length
+console.log(numberOfPairs)
 
-const [trainingData, validationData] = trainingAndValidationSet(pairs, 80000, 1000)
+const validationSize = 1000
+const [trainingData, validationData] = trainingAndValidationSet(pairs, numberOfPairs - validationSize, validationSize)
 
 const charTable = produceCharacterTable(names)
 writeFile(join(folder, "chartable.json"), JSON.stringify(charTable))
@@ -30,7 +32,7 @@ const model = string2UppercaseIndicesModel(200, windowLength, numberOfCharacters
 
 const batchSize = 32
 let validationLossReduction = 1.0
-const epochs = 20
+const epochs = 50
 
 while (validationLossReduction > 0.01) {
     const history = await model.fit(encodedTrainingInput, encodedTrainingOutput, {

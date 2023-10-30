@@ -9,7 +9,7 @@ const folder = await modelFolder("string2indices")
 const model = await tf.loadLayersModel(`file://${folder}/model/model.json`);
 const charTable = await JSON.parse(await readFile(join(folder, "chartable.json"), { encoding: 'utf8' }))
 
-function unmerge(windows) {
+function unmerge(windows, name) {
     const finalLength = windows.length + windows[0].length - 1
     
     const getCharsForPosition = function(position) {
@@ -29,9 +29,9 @@ function unmerge(windows) {
         return maxChar
     }
 
-    let result = "";
+    let result = name[0];
 
-    for (let index = 0; index < finalLength; index++) {
+    for (let index = 1; index < finalLength; index++) {
         const chars = getCharsForPosition(index)
         result = result + majority(chars)
     }
@@ -44,5 +44,5 @@ export async function convertToCamelcase(name) {
     const encodedWindows = encodeStrings(nameWindows, charTable)
     const prediction = model.predict(encodedWindows)
     const predictedWindows = await decodeUppercaseIndices(prediction, nameWindows, 0.5)
-    return unmerge(predictedWindows)
+    return unmerge(predictedWindows, name)
 }
