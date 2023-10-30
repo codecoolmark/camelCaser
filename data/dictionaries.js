@@ -33,6 +33,12 @@ export async function methodNameParts() {
     return wordSet;
 }
 
+export async function alphabeticMethodNames() {
+    const names = await methodNames()
+    const regex = new RegExp(/^[a-zA-Z]+$/, "g")
+    return names.filter(name => regex.test(name))
+}
+
 export async function methodNamesAndStats() {
     const wordFile = await open("stats.csv")
     const stats = new Map()
