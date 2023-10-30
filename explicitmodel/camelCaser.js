@@ -1,4 +1,4 @@
-import { joinCamelCase } from './methodNames.js';
+import { joinCamelCase } from '../data/methodNames.js';
 import { splittings } from './splittings.js';
 
 export function convertToCamelCaseDictionary(words, identifier) {
