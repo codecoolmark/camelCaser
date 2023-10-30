@@ -1,11 +1,14 @@
 import { plot } from "nodeplotlib"
-import { methodNames } from "./data/dictionaries.js"
+import { alphabeticMethodNames, methodNames } from "./data/dictionaries.js"
 import { average, count, numericalHistogram, numericalMax, std } from "./data/arrays.js"
 import { splitCamelCase } from "./data/methodNames.js"
 
 const names = await methodNames() 
 console.log("Data contains", names.length, "unique method names.")
 const lengths = names.map(name => name.length)
+const alphabeticNames = await alphabeticMethodNames()
+console.log("Data contains", alphabeticNames.length, "alphabetic method names")
+console.log(alphabeticNames)
 
 const longestName = numericalMax(lengths)
 console.log("Longest name is", longestName, "charcters.")
