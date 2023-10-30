@@ -9,7 +9,7 @@
     "analyze-data": "node inspectData.js",
     "score": "deno run --allow-read score.js",
     "testString2String": "node tensorflow/string2String/testString2String.js",
-    "trainString2String": "node trainString2String.js",
+    "trainString2String": "node tensorflow/string2String/trainString2String.js",
     "trainString2Indices": "node tensorflow/string2Indices/trainString2Indices.js",
     "testString2Indices": "node tensorflow/string2Indices/testString2Indices.js",
     "converter": "node converter.js"
