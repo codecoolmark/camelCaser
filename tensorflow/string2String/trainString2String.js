@@ -33,7 +33,7 @@ console.log(encodedTrainingOutput.shape)
 console.log(encodedValidationInput.shape)
 console.log(encodedValidationOutput.shape)
 
-const model = string2StringModel(256, windowLength, numberOfCharacters);
+const model = string2StringModel(400, windowLength, numberOfCharacters);
 
 const batchSize = 32
 

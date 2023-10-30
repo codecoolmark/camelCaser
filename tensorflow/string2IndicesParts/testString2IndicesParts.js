@@ -1,8 +1,8 @@
 import * as tf from '@tensorflow/tfjs-node';
-import { decodeUppercaseIndices, encodeStrings, parts } from "./tensorflow/data.js"
+import { decodeUppercaseIndices, encodeStrings, parts } from "../data.js"
 import { readFile } from 'node:fs/promises';
-import { methodNames } from './data/dictionaries.js';
-import { modelFolder } from './tensorflow/io.js';
+import { methodNames } from '../../data/dictionaries.js';
+import { modelFolder } from '../io.js';
 import { join } from 'node:path';
 
 const windowLength = 5
