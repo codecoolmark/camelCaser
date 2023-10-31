@@ -46,6 +46,19 @@ export function produceCharacterTable(names) {
     return table
 }
 
+export function alphaNumericCharacterTable(placeholder) {
+    const alphaNumericChars = "abcdefghijklmnopqrstuvwxyz123456789" + placeholder
+    return produceCharacterTable([alphaNumericChars, alphaNumericChars.toUpperCase()])
+}
+
+export function replaceUnknownCharacters(characterTable, fallback, string) {
+    return Array.from(string).map(char => char in characterTable ? char : fallback).join("")
+}
+
+export function replacePlaceholder(input, prediction, placeholder) {
+    return Array.from(prediction).map((char, index) => char === placeholder ? input[index] : char).join("")
+}
+
 export function encodeStrings(normalizedStrings, charTable) {
     // explain hot encoding (equal distance between vectors)
     
